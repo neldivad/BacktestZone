@@ -9,9 +9,17 @@ from PIL import Image
 import performanceanalytics.statistics as pas
 import performanceanalytics.table.table as pat
 
+logo = Image.open('BacktestZone_logo.png')
+
+st.set_page_config(
+    page_title = 'A No-Code tool to Backtest Trading Strategies for Free',
+    page_icon = logo,
+    layout = 'wide'
+)
+
 def import_scripts():
     tickers = pd.read_csv('NSE_Stocks.csv')
-    return tickers
+    return tickers['SYMBOL']
 
 def import_indicators():
     indicators = ['SuperTrend', '-DI, Negative Directional Index', 'Normalized Average True Range (NATR)', 'Average Directional Index (ADX)', 'Stochastic Oscillator Fast (SOF)', 'Stochastic Oscillator Slow (SOS)', 'Weighted Moving Average (WMA)', 'Momentum Indicator (MOM)', 'Vortex Indicator (VI)', 'Chande Momentum Oscillator (CMO)', 'Exponential Moving Average (EMA)', 'Triple Exponential Moving Average (TEMA)', 'Double Exponential Moving Average (DEMA)', 'Simple Moving Average (SMA)', 'Triangular Moving Average (TRIMA)', 'Chande Forecast Oscillator (CFO)', 'Choppiness Index', 'Aroon Down', 'Average True Range (ATR)', 'Williams %R', 'Parabolic SAR', 'Coppock Curve', '+DI, Positive Directional Index', 'Relative Strength Index (RSI)', 'MACD Signal', 'Aroon Oscillator', 'Stochastic RSI FastK', 'Stochastic RSI FastD', 'Ultimate Oscillator', 'Aroon Up', 'Bollinger Bands', 'TRIX', 'Commodity Channel Index (CCI)', 'MACD', 'MACD Histogram', 'Money Flow Index (MFI)']
@@ -4793,13 +4801,6 @@ def sortino_ratio(series, N, rf):
     mean = series.mean() * N - rf
     std_neg = series[series < 0].std() * np.sqrt(N)
     return mean/std_neg
-
-logo = Image.open('BacktestZone_logo.png')
-
-st.set_page_config(
-    page_title = 'A No-Code tool to Backtest Trading Strategies for Free',
-    page_icon = logo
-)
 
 st.sidebar.title('BacktestZone')
 st.sidebar.markdown('A free tool to backtest different trading strategies on 1500+ NSE Stocks')

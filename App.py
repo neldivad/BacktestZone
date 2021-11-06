@@ -9,6 +9,14 @@ from PIL import Image
 import performanceanalytics.statistics as pas
 import performanceanalytics.table.table as pat
 
+logo = Image.open('BacktestZone_logo.png')
+
+st.set_page_config(
+    page_title = 'A No-Code tool to Backtest Trading Strategies for Free',
+    page_icon = logo,
+    layout = 'wide'
+)
+
 def import_scripts():
     tickers = pd.read_csv('NSE_Stocks.csv')
     return tickers['SYMBOL']
@@ -4793,13 +4801,6 @@ def sortino_ratio(series, N, rf):
     mean = series.mean() * N - rf
     std_neg = series[series < 0].std() * np.sqrt(N)
     return mean/std_neg
-
-logo = Image.open('BacktestZone_logo.png')
-
-st.set_page_config(
-    page_title = 'A No-Code tool to Backtest Trading Strategies for Free',
-    page_icon = logo
-)
 
 st.sidebar.title('BacktestZone')
 st.sidebar.markdown('A free tool to backtest different trading strategies on 1500+ NSE Stocks')

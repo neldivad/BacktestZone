@@ -11,7 +11,7 @@ import performanceanalytics.table.table as pat
 
 def import_scripts():
     tickers = pd.read_csv('NSE_Stocks.csv')
-    return tickers
+    return tickers['SYMBOL']
 
 def import_indicators():
     indicators = ['SuperTrend', '-DI, Negative Directional Index', 'Normalized Average True Range (NATR)', 'Average Directional Index (ADX)', 'Stochastic Oscillator Fast (SOF)', 'Stochastic Oscillator Slow (SOS)', 'Weighted Moving Average (WMA)', 'Momentum Indicator (MOM)', 'Vortex Indicator (VI)', 'Chande Momentum Oscillator (CMO)', 'Exponential Moving Average (EMA)', 'Triple Exponential Moving Average (TEMA)', 'Double Exponential Moving Average (DEMA)', 'Simple Moving Average (SMA)', 'Triangular Moving Average (TRIMA)', 'Chande Forecast Oscillator (CFO)', 'Choppiness Index', 'Aroon Down', 'Average True Range (ATR)', 'Williams %R', 'Parabolic SAR', 'Coppock Curve', '+DI, Positive Directional Index', 'Relative Strength Index (RSI)', 'MACD Signal', 'Aroon Oscillator', 'Stochastic RSI FastK', 'Stochastic RSI FastD', 'Ultimate Oscillator', 'Aroon Up', 'Bollinger Bands', 'TRIX', 'Commodity Channel Index (CCI)', 'MACD', 'MACD Histogram', 'Money Flow Index (MFI)']

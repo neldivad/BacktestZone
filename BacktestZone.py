@@ -224,7 +224,7 @@ elif cf_bt == True:
         else:
             position[i] = position[i-1]
     
-    st.caption(f'BACKTEST  RESULTS  FROM  {backtestdata.index[0]}  TO  {backtestdata.index[-1]}')
+    st.caption(f'BACKTEST  RESULTS  FROM  {start_date}  TO  {end_date}')
     
     st.markdown('')
     

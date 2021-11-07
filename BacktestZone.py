@@ -14,7 +14,8 @@ logo = Image.open('BacktestZone_logo.png')
 
 st.set_page_config(
     page_title = 'A No-Code tool to Backtest Trading Strategies for Free',
-    page_icon = logo
+    page_icon = logo,
+    layout = 'wide'
 )
 
 st.sidebar.title('BacktestZone')

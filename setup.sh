@@ -1,13 +1,14 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Nov 7 10:47:19 2021
+@author: Nikhil Adithyan
+"""
+
 mkdir -p ~/.streamlit/
-
-echo "\
-[general]\n\
-email = \"your-email@domain.com\"\n\
-" > ~/.streamlit/credentials.toml
-
 echo "\
 [server]\n\
 headless = true\n\
-enableCORS=false\n\
 port = $PORT\n\
+enableCORS = false\n\
+\n\
 " > ~/.streamlit/config.toml

@@ -228,9 +228,7 @@ elif cf_bt == True:
     st.caption(f'BACKTEST  RESULTS  FROM  {start_date}  TO  {end_date}')
     
     st.markdown('')
-    
-    st.dataframe(backtestdata)
-    
+        
     buy_hold = backtestdata.Close.pct_change().dropna()
     strategy = (position[1:] * buy_hold).dropna()
     strategy_returns_per = np.exp(strategy.sum()) - 1

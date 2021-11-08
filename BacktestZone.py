@@ -229,6 +229,8 @@ elif cf_bt == True:
     
     st.markdown('')
     
+    st.dataframe(backtestdata)
+    
     buy_hold = backtestdata.Close.pct_change().dropna()
     strategy = (position[1:] * buy_hold).dropna()
     strategy_returns_per = np.exp(strategy.sum()) - 1

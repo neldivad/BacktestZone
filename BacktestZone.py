@@ -225,6 +225,8 @@ elif cf_bt == True:
         else:
             position[i] = position[i-1]
     
+    st.dataframe(backtestdata)
+    
     st.caption(f'BACKTEST  RESULTS  FROM  {start_date}  TO  {end_date}')
     
     st.markdown('')

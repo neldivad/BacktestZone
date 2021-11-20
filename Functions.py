@@ -6,7 +6,7 @@ import performanceanalytics.statistics as pas
 from scipy import stats
 
 def import_scripts():
-    tickers = pd.read_csv('NSE_Stocks.csv')
+    tickers = pd.read_csv('scripts_list.csv')
     return tickers['SYMBOL']
 
 def import_indicators():

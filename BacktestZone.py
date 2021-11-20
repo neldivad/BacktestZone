@@ -1,14 +1,14 @@
-from nsepy import get_history
 import pandas as pd
 import numpy as np
 import streamlit as st
-from datetime import date as dt
+from datetime import datetime as dt
 import ffn
 from Functions import *
 import pandas_ta as ta
 from PIL import Image
 import performanceanalytics.statistics as pas
 import performanceanalytics.table.table as pat
+import investpy as inv
 
 logo = Image.open('BacktestZone_logo.png')
 
@@ -19,7 +19,7 @@ st.set_page_config(
 )
 
 st.sidebar.title('BacktestZone')
-st.sidebar.markdown('A free tool to backtest different trading strategies on 1500+ NSE Stocks')
+st.sidebar.markdown('A free tool to backtest different trading strategies on 4000+ US Stocks')
 st.sidebar.markdown('')
 
 scripts = import_scripts()
@@ -28,17 +28,23 @@ indicators = import_indicators()
 backtest_timeframe = st.sidebar.expander('BACKTEST TIMEFRAME')
 
 start_date = backtest_timeframe.date_input('Starting Date', value = dt(2017,1,1), min_value = dt(2015,1,1), max_value = dt(2019,1,1))
+str_start_date = str(start_date)
+start_date = str_start_date[-2:] + '/' + str_start_date[5:7] + '/' + str_start_date[:4]
+
 end_date = backtest_timeframe.date_input('Ending Date', min_value = dt(2021,1,10))
+str_end_date = str(end_date)
+end_date = str_end_date[-2:] + '/' + str_end_date[5:7] + '/' + str_end_date[:4]
 
 symbol = st.sidebar.selectbox('SCRIPT', scripts)
+ticker = str(symbol).split('(')[1][:-1]
     
 indicator = st.sidebar.selectbox('INDICATOR', indicators)
 
 df_start = dt(2013,1,1)
-try:
-    data = get_history(symbol, df_start, end_date)[['Open', 'High', 'Low', 'Close', 'Volume', 'Prev Close']].astype(float)
-except:
-    st.error('AN ERROR OCCURED. REFRESH THE PAGE TO GET THINGS RIGHT.')
+str_dfstart_date = str(df_start)[:-9]
+df_start = str_dfstart_date[-2:] + '/' + str_dfstart_date[5:7] + '/' + str_dfstart_date[:4]
+
+data = inv.get_stock_historical_data(stock = ticker, country = 'United States', from_date = df_start, to_date = end_date)
 
     
 # 1. SUPERTREND
@@ -190,7 +196,7 @@ cf_bt = st.sidebar.button('Save & Backtest')
 if cf_bt == False:
     st.info('Hit the "Save & Backtest" button at the bottom left corner to view the results')
 elif cf_bt == True:
-    backtestdata = get_history(symbol, start_date, end_date)[['Open', 'High', 'Low', 'Close', 'Volume', 'Prev Close']]
+    backtestdata = inv.get_stock_historical_data(stock = ticker, country = 'United States', from_date = start_date, to_date = end_date)
     if entry_comparator == '<, Crossing Down' and exit_comparator == '<, Crossing Down':
         buy_price, sell_price, strategy_signals = crossingdown_crossingdown(backtestdata, entry_data1, entry_data2, exit_data1, exit_data2)
     elif entry_comparator == '<, Crossing Down' and exit_comparator == '>, Crossing Up':
@@ -224,11 +230,11 @@ elif cf_bt == True:
             position[i] = 0
         else:
             position[i] = position[i-1]
-        
+    
     st.caption(f'BACKTEST  RESULTS  FROM  {start_date}  TO  {end_date}')
     
     st.markdown('')
-        
+    
     buy_hold = backtestdata.Close.pct_change().dropna()
     strategy = (position[1:] * buy_hold).dropna()
     strategy_returns_per = np.exp(strategy.sum()) - 1
@@ -296,15 +302,12 @@ elif cf_bt == True:
     
     drawdown_details = st.expander('DRAWDOWN DETAILS')
     
-    #dd_details = ffn.core.drawdown_details(strategy_drawdown)
-    #details_series = pd.Series(dd_details.drawdown)
-    
     dd_details = pat.drawdown_table(strategy)
     drawdown_details.dataframe(dd_details)
     
     ratios = st.expander('RATIOS')
     
-    ratios.caption('Values Assumed:  Benchmark = NIFTY 50,  Risk-Free Rate = 0.06')
+    ratios.caption('Values Assumed:  Benchmark = S&P 500,  Risk-Free Rate = 0.06')
     
     ratios.markdown('')
     
@@ -317,7 +320,7 @@ elif cf_bt == True:
     calmar_ratio = calmar_ratio.metric(label = 'Calmar Ratio', value = f'{round(calmar,3)}')
     sortino_ratio = sortino_ratio.metric(label = 'Sortino Ratio', value = f'{round(sortino,3)}')
     
-    benchmark_data = get_history('NIFTY', start_date, end_date, index = True).astype(float)
+    benchmark_data = inv.get_index_historical_data(index = 'S&P 500', country = "United States", from_date = start_date, to_date = end_date)
     benchmark = benchmark_data.Close.pct_change().dropna()
     
     treynor = pas.treynor_ratio(strategy, benchmark, 0.06)

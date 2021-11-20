@@ -1,5 +1,5 @@
 ffn==0.3.6
-nsepy==0.8
+investpy==1.0.7
 numpy==1.18.5
 pandas==1.2.5
 pandas_ta==0.2.45b0

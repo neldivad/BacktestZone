@@ -302,18 +302,18 @@ elif cf_bt == True:
     
     drawdown_details = st.expander('DRAWDOWN DETAILS')
     
-    dd_details = pat.drawdown_table(strategy)
-    drawdown_details.dataframe(dd_details)
+    dd_details = ffn.core.drawdown_details(strategy)
+    drawdown_details.table(dd_details)
     
     ratios = st.expander('RATIOS')
     
-    ratios.caption('Values Assumed:  Benchmark = S&P 500,  Risk-Free Rate = 0.06')
+    ratios.caption('Values Assumed:  Benchmark = S&P 500,  Risk-Free Rate = 0.01')
     
     ratios.markdown('')
     
-    sharpe = pas.sharpe_ratio(strategy, 0.06)
-    calmar = pas.calmar_ratio(strategy, 0.06)
-    sortino = sortino_ratio(strategy, 255, 0.06)
+    sharpe = pas.sharpe_ratio(strategy, 0.01)
+    calmar = pas.calmar_ratio(strategy, 0.01)
+    sortino = sortino_ratio(strategy, 255, 0.01)
     
     sharpe_ratio, calmar_ratio, sortino_ratio = ratios.columns(3)
     sharpe_ratio = sharpe_ratio.metric(label = 'Sharpe Ratio', value = f'{round(sharpe,3)}')
@@ -323,18 +323,18 @@ elif cf_bt == True:
     benchmark_data = inv.get_index_historical_data(index = 'S&P 500', country = "United States", from_date = start_date, to_date = end_date)
     benchmark = benchmark_data.Close.pct_change().dropna()
     
-    treynor = pas.treynor_ratio(strategy, benchmark, 0.06)
+    treynor = pas.treynor_ratio(strategy, benchmark, 0.01)
     information = pas.information_ratio(strategy, benchmark)
-    modigliani = pas.modigliani_ratio(strategy, benchmark, 0.06)
+    modigliani = pas.modigliani_ratio(strategy, benchmark, 0.01)
     
     treynor_ratio, information_ratio, modigliani_ratio = ratios.columns(3)
     treynor_ratio = treynor_ratio.metric(label = 'Treynor Ratio', value = f'{round(treynor,3)}')
     information_ratio = information_ratio.metric(label = 'Information Ratio', value = f'{round(information,3)}')
     modigliani_ratio = modigliani_ratio.metric(label = 'Modigliani Ratio', value = f'{round(modigliani,3)}')
     
-    sterling = pas.sterling_ratio(strategy, 0.06, 5) 
-    burke = pas.burke_ratio(strategy, 0.06, 5)
-    cond_sharpe = pas.conditional_sharpe_ratio(strategy, 0.06, 0.05)
+    sterling = pas.sterling_ratio(strategy, 0.01, 5) 
+    burke = pas.burke_ratio(strategy, 0.01, 5)
+    cond_sharpe = pas.conditional_sharpe_ratio(strategy, 0.01, 0.05)
 
     sterling_ratio, burke_ratio, cond_sharpe_ratio = ratios.columns(3)
     sterling_ratio = sterling_ratio.metric(label = 'Sterling Ratio', value = f'{round(sterling,3)}')

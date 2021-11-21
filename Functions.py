@@ -132,7 +132,7 @@ def get_psar(high, low, close, af, max_af):
 def implement_supertrend(num_stream, data, start_date, end_date):
     
     inputs1 = ['SuperTrend']
-    inputs2 = ['Close', 'Open', 'High', 'Low', 'SuperTrend', 'Prev Close', 'Number']
+    inputs2 = ['Close', 'Open', 'High', 'Low', 'SuperTrend', 'Number']
     entry_conditions = ['<, Crossing Down', '>, Crossing Up', '==, Equal To']
     exit_conditions = ['>, Crossing Up', '<, Crossing Down', '==, Equal To']
     
@@ -761,7 +761,7 @@ def implement_stochastic_oscillator_slow(num_stream, data, start_date, end_date)
 def implement_weighted_moving_average(num_stream, data, start_date, end_date):
     
         inputs1 = ['WMA']
-        inputs2 = ['Close', 'EMA', 'SMA', 'TRIMA', 'TEMA', 'DEMA', 'WMA', 'Open', 'High', 'Low', 'Prev Close', 'Number']
+        inputs2 = ['Close', 'EMA', 'SMA', 'TRIMA', 'TEMA', 'DEMA', 'WMA', 'Open', 'High', 'Low', 'Number']
         entry_conditions = ['<, Crossing Down', '>, Crossing Up', '==, Equal To']
         exit_conditions = ['>, Crossing Up', '<, Crossing Down', '==, Equal To']
 
@@ -1243,7 +1243,7 @@ def implement_chande_momentum_oscillator(num_stream, data, start_date, end_date)
 def implement_exponential_moving_average(num_stream, data, start_date, end_date):
 
         inputs1 = ['EMA']
-        inputs2 = ['EMA', 'SMA', 'TRIMA', 'TEMA', 'DEMA', 'WMA', 'Open', 'High', 'Low', 'Close', 'Prev Close', 'Number']
+        inputs2 = ['EMA', 'SMA', 'TRIMA', 'TEMA', 'DEMA', 'WMA', 'Open', 'High', 'Low', 'Close', 'Number']
         entry_conditions = ['>, Crossing Up', '<, Crossing Down', '==, Equal To']
         exit_conditions = ['<, Crossing Down', '>, Crossing Up', '==, Equal To']
 
@@ -1420,7 +1420,7 @@ def implement_exponential_moving_average(num_stream, data, start_date, end_date)
 def implement_triple_exponential_moving_average(num_stream, data, start_date, end_date):
 
         inputs1 = ['TEMA']
-        inputs2 = ['TEMA', 'SMA', 'TRIMA', 'EMA', 'DEMA', 'WMA', 'Open', 'High', 'Low', 'Close', 'Prev Close', 'Number']
+        inputs2 = ['TEMA', 'SMA', 'TRIMA', 'EMA', 'DEMA', 'WMA', 'Open', 'High', 'Low', 'Close', 'Number']
         entry_conditions = ['>, Crossing Up', '<, Crossing Down', '==, Equal To']
         exit_conditions = ['<, Crossing Down', '>, Crossing Up', '==, Equal To']
 
@@ -1597,7 +1597,7 @@ def implement_triple_exponential_moving_average(num_stream, data, start_date, en
 def implement_double_exponential_moving_average(num_stream, data, start_date, end_date):
 
         inputs1 = ['DEMA']
-        inputs2 = ['DEMA', 'High', 'Low', 'Open', 'Close', 'Prev Close', 'Number', 'TEMA', 'SMA', 'TRIMA', 'EMA', 'WMA']
+        inputs2 = ['DEMA', 'High', 'Low', 'Open', 'Close', 'Number', 'TEMA', 'SMA', 'TRIMA', 'EMA', 'WMA']
         entry_conditions = ['>, Crossing Up', '<, Crossing Down', '==, Equal To']
         exit_conditions = ['<, Crossing Down', '>, Crossing Up', '==, Equal To']
 
@@ -1774,7 +1774,7 @@ def implement_double_exponential_moving_average(num_stream, data, start_date, en
 def implement_simple_moving_average(num_stream, data, start_date, end_date):
 
         inputs1 = ['SMA']
-        inputs2 = ['SMA', 'EMA', 'TRIMA', 'TEMA', 'DEMA', 'WMA', 'Open', 'High', 'Low', 'Close', 'Prev Close', 'Number']
+        inputs2 = ['SMA', 'EMA', 'TRIMA', 'TEMA', 'DEMA', 'WMA', 'Open', 'High', 'Low', 'Close', 'Number']
         entry_conditions = ['>, Crossing Up', '<, Crossing Down', '==, Equal To']
         exit_conditions = ['<, Crossing Down', '>, Crossing Up', '==, Equal To']
 
@@ -1951,7 +1951,7 @@ def implement_simple_moving_average(num_stream, data, start_date, end_date):
 def implement_triangular_moving_average(num_stream, data, start_date, end_date):
 
         inputs1 = ['TRIMA']
-        inputs2 = ['TRIMA', 'EMA', 'SMA', 'TEMA', 'DEMA', 'WMA', 'Open', 'High', 'Low', 'Close', 'Prev Close', 'Number']
+        inputs2 = ['TRIMA', 'EMA', 'SMA', 'TEMA', 'DEMA', 'WMA', 'Open', 'High', 'Low', 'Close', 'Number']
         entry_conditions = ['>, Crossing Up', '<, Crossing Down', '==, Equal To']
         exit_conditions = ['<, Crossing Down', '>, Crossing Up', '==, Equal To']
 
@@ -2615,7 +2615,7 @@ def implement_williamsr(num_stream, data, start_date, end_date):
 def implement_parabolic_sar(num_stream, data, start_date, end_date):
 
         inputs1 = ['Parabolic SAR']
-        inputs2 = ['Close', 'High', 'Low', 'Open', 'Prev Close', 'Number']
+        inputs2 = ['Close', 'High', 'Low', 'Open', 'Number']
         entry_conditions = ['<, Crossing Down', '>, Crossing Up', '==, Equal To']
         exit_conditions = ['>, Crossing Up', '<, Crossing Down', '==, Equal To']
 

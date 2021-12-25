@@ -19,7 +19,7 @@ st.set_page_config(
 )
 
 st.sidebar.title('BacktestZone')
-st.sidebar.markdown('A free tool to backtest different trading strategies on 4000+ US Stocks')
+st.sidebar.markdown('A free tool to backtest different trading strategies on 24K+ Tradeable US Assets')
 st.sidebar.markdown('')
 
 backtest_timeframe = st.sidebar.expander('BACKTEST TIMEFRAME')

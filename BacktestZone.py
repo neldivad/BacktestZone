@@ -22,9 +22,6 @@ st.sidebar.title('BacktestZone')
 st.sidebar.markdown('A free tool to backtest different trading strategies on 4000+ US Stocks')
 st.sidebar.markdown('')
 
-scripts = import_scripts()
-indicators = import_indicators()
-
 backtest_timeframe = st.sidebar.expander('BACKTEST TIMEFRAME')
 
 start_date = backtest_timeframe.date_input('Starting Date', value = dt(2017,1,1), min_value = dt(2015,1,1), max_value = dt(2019,1,1))
@@ -35,16 +32,24 @@ end_date = backtest_timeframe.date_input('Ending Date', min_value = dt(2021,1,10
 str_end_date = str(end_date)
 end_date = str_end_date[-2:] + '/' + str_end_date[5:7] + '/' + str_end_date[:4]
 
+assets_list = ['Stocks', 'Cryptocurrencies', 'Forex', 'Funds', 'Commodities', 'ETFs', 'Indices', 'Bonds']
+asset = st.sidebar.selectbox('ASSET', assets_list, key = 'assets_selectbox')
+scripts = import_scripts(asset_type = asset)
+
 symbol = st.sidebar.selectbox('SCRIPT', scripts)
-ticker = str(symbol).split('(')[1][:-1]
-    
+if asset == 'Stocks':
+    ticker = str(symbol).split('(')[1][:-1]
+else:
+    ticker = symbol
+
+indicators = import_indicators()
 indicator = st.sidebar.selectbox('INDICATOR', indicators)
 
 df_start = dt(2013,1,1)
 str_dfstart_date = str(df_start)[:-9]
 df_start = str_dfstart_date[-2:] + '/' + str_dfstart_date[5:7] + '/' + str_dfstart_date[:4]
 
-data = inv.get_stock_historical_data(stock = ticker, country = 'United States', from_date = df_start, to_date = end_date)
+data = import_data(asset, ticker, df_start, end_date)
 
     
 # 1. SUPERTREND
@@ -196,7 +201,16 @@ cf_bt = st.sidebar.button('Save & Backtest')
 if cf_bt == False:
     st.info('Hit the "Save & Backtest" button at the bottom left corner to view the results')
 elif cf_bt == True:
-    backtestdata = inv.get_stock_historical_data(stock = ticker, country = 'United States', from_date = start_date, to_date = end_date)
+    backtestdata = import_data(asset, ticker, start_date, end_date)
+    str_start_date = str(backtestdata.index[0])[:10]
+    str_end_date = str(backtestdata.index[-1])[:10]
+    benchmark_start_date = str_start_date[-2:] + '/' + str_start_date[5:7] + '/' + str_start_date[:4]
+    benchmark_end_date = str_end_date[-2:] + '/' + str_end_date[5:7] + '/' + str_end_date[:4]
+    benchmark_data = import_data('Indices', 'S&P 500', benchmark_start_date, benchmark_end_date)
+    benchmark_index_list = list(benchmark_data.index)
+    backtestdata = backtestdata[backtestdata.index.isin(benchmark_index_list)]
+    benchmark = benchmark_data.Close.pct_change().dropna()
+            
     if entry_comparator == '<, Crossing Down' and exit_comparator == '<, Crossing Down':
         buy_price, sell_price, strategy_signals = crossingdown_crossingdown(backtestdata, entry_data1, entry_data2, exit_data1, exit_data2)
     elif entry_comparator == '<, Crossing Down' and exit_comparator == '>, Crossing Up':
@@ -231,7 +245,7 @@ elif cf_bt == True:
         else:
             position[i] = position[i-1]
     
-    st.caption(f'BACKTEST  RESULTS  FROM  {start_date}  TO  {end_date}')
+    st.caption(f'BACKTEST  RESULTS  FROM  {str_start_date}  TO  {str_end_date}')
     
     st.markdown('')
     
@@ -283,11 +297,17 @@ elif cf_bt == True:
     
     key_visuals.caption('Maximum Drawdown')    
     strategy_drawdown = ffn.core.to_drawdown_series(scr.Returns)
-    bh_drawdown = ffn.core.to_drawdown_series(buy_hold.cumsum())
-    strategy_drawdown.name, bh_drawdown.name = 'Strategy', 'Buy/Hold'
-    frames = [strategy_drawdown, bh_drawdown]
-    drawdown = pd.concat(frames, axis = 1)
-    key_visuals.line_chart(drawdown)
+    if len(strategy_drawdown) == 0:
+        pass
+    else:
+        bh_drawdown = ffn.core.to_drawdown_series(buy_hold.cumsum())
+        strategy_drawdown = strategy_drawdown[((strategy_drawdown != np.float64('NAN')) & (strategy_drawdown != np.float64('-Infinity')))]
+        drawdown_index_difference = len(bh_drawdown) - len(strategy_drawdown)
+        bh_drawdown = bh_drawdown[drawdown_index_difference:]
+        strategy_drawdown.name, bh_drawdown.name = 'Strategy', 'Buy/Hold'
+        frames = [strategy_drawdown, bh_drawdown]
+        drawdown = pd.concat(frames, axis = 1)
+        key_visuals.line_chart(drawdown)
     
     key_visuals.markdown('')
     key_visuals.markdown('')
@@ -299,6 +319,15 @@ elif cf_bt == True:
     frames = [bhr, scr]
     bhr_compdf = pd.concat(frames, axis = 1)
     key_visuals.line_chart(bhr_compdf)
+    
+    key_visuals.markdown('')
+    key_visuals.markdown('')
+    
+    key_visuals.caption('Benchmark Returns Comparison')
+    benchmark_cs_returns_df = pd.DataFrame(benchmark.cumsum()).rename(columns = {'Close':'Benchmark'})
+    frames = [benchmark_cs_returns_df, scr]
+    benchmark_compdf = pd.concat(frames, axis = 1)
+    key_visuals.line_chart(benchmark_compdf)
     
     drawdown_details = st.expander('DRAWDOWN DETAILS')
     
@@ -319,10 +348,7 @@ elif cf_bt == True:
     sharpe_ratio = sharpe_ratio.metric(label = 'Sharpe Ratio', value = f'{round(sharpe,3)}')
     calmar_ratio = calmar_ratio.metric(label = 'Calmar Ratio', value = f'{round(calmar,3)}')
     sortino_ratio = sortino_ratio.metric(label = 'Sortino Ratio', value = f'{round(sortino,3)}')
-    
-    benchmark_data = inv.get_index_historical_data(index = 'S&P 500', country = "United States", from_date = start_date, to_date = end_date)
-    benchmark = benchmark_data.Close.pct_change().dropna()
-    
+
     treynor = pas.treynor_ratio(strategy, benchmark, 0.01)
     information = pas.information_ratio(strategy, benchmark)
     modigliani = pas.modigliani_ratio(strategy, benchmark, 0.01)

@@ -4,11 +4,46 @@ import pandas_ta as ta
 import math
 import performanceanalytics.statistics as pas
 from scipy import stats
+import investpy as inv
 
-def import_scripts():
-    tickers = pd.read_csv('scripts_list.csv')
-    return tickers['SYMBOL']
+def import_scripts(asset_type):
+    if asset_type == 'Stocks':
+        scripts = pd.read_csv('scripts_list.csv')['SYMBOL']
+    elif asset_type == 'Cryptocurrencies':
+        scripts = pd.read_csv('crypto.csv')['name']
+    elif asset_type == 'Commodities':
+        scripts = pd.read_csv('commodities.csv')['name']
+    elif asset_type == 'Forex':
+        scripts = pd.read_csv('forex.csv')['name']
+    elif asset_type == 'ETFs':
+        scripts = pd.read_csv('us_etfs.csv')['name']
+    elif asset_type == 'Indices':
+        scripts = pd.read_csv('us_indices.csv')['name']
+    elif asset_type == 'Funds':
+        scripts = pd.read_csv('us_funds.csv')['name']
+    elif asset_type == 'Bonds':
+        scripts = pd.read_csv('us_bonds.csv')['name']
+    return scripts
 
+def import_data(asset_type, ticker, start_date, end_date):
+    if asset_type == 'Stocks':
+        data = inv.get_stock_historical_data(stock = ticker, country = 'United States', from_date = start_date, to_date = end_date)
+    elif asset_type == 'Cryptocurrencies':
+        data = inv.get_crypto_historical_data(crypto = ticker, from_date = start_date, to_date = end_date)
+    elif asset_type == 'Commodities':
+        data = inv.get_commodity_historical_data(commodity = ticker, from_date = start_date, to_date = end_date)
+    elif asset_type == 'Forex':
+        data = inv.get_currency_cross_historical_data(currency_cross = ticker, from_date = start_date, to_date = end_date)
+    elif asset_type == 'ETFs':
+        data = inv.get_etf_historical_data(etf = ticker, country = 'United States', from_date = start_date, to_date = end_date)
+    elif asset_type == 'Indices':
+        data = inv.get_index_historical_data(index = ticker, country = 'United States', from_date = start_date, to_date = end_date)
+    elif asset_type == 'Funds':
+        data = inv.get_fund_historical_data(fund = ticker, country = 'United States', from_date = start_date, to_date = end_date)
+    elif asset_type == 'Bonds':
+        data = inv.get_bond_historical_data(bond = ticker, country = 'United States', from_date = start_date, to_date = end_date)
+    return data
+    
 def import_indicators():
     indicators = ['SuperTrend', '-DI, Negative Directional Index', 'Normalized Average True Range (NATR)', 'Average Directional Index (ADX)', 'Stochastic Oscillator Fast (SOF)', 'Stochastic Oscillator Slow (SOS)', 'Weighted Moving Average (WMA)', 'Momentum Indicator (MOM)', 'Vortex Indicator (VI)', 'Chande Momentum Oscillator (CMO)', 'Exponential Moving Average (EMA)', 'Triple Exponential Moving Average (TEMA)', 'Double Exponential Moving Average (DEMA)', 'Simple Moving Average (SMA)', 'Triangular Moving Average (TRIMA)', 'Chande Forecast Oscillator (CFO)', 'Choppiness Index', 'Aroon Down', 'Average True Range (ATR)', 'Williams %R', 'Parabolic SAR', 'Coppock Curve', '+DI, Positive Directional Index', 'Relative Strength Index (RSI)', 'MACD Signal', 'Aroon Oscillator', 'Stochastic RSI FastK', 'Stochastic RSI FastD', 'Ultimate Oscillator', 'Aroon Up', 'Bollinger Bands', 'TRIX', 'Commodity Channel Index (CCI)', 'MACD', 'MACD Histogram', 'Money Flow Index (MFI)']
     return indicators

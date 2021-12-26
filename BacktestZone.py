@@ -19,7 +19,7 @@ st.set_page_config(
 )
 
 st.sidebar.title('BacktestZone')
-st.sidebar.markdown('A free tool to backtest different trading strategies on 24K+ Tradeable US Assets')
+st.sidebar.markdown('A free tool to backtest different trading strategies on 4000+ US Stocks')
 st.sidebar.markdown('')
 
 backtest_timeframe = st.sidebar.expander('BACKTEST TIMEFRAME')
@@ -207,10 +207,16 @@ elif cf_bt == True:
     benchmark_start_date = str_start_date[-2:] + '/' + str_start_date[5:7] + '/' + str_start_date[:4]
     benchmark_end_date = str_end_date[-2:] + '/' + str_end_date[5:7] + '/' + str_end_date[:4]
     benchmark_data = import_data('Indices', 'S&P 500', benchmark_start_date, benchmark_end_date)
-    benchmark_index_list = list(benchmark_data.index)
-    backtestdata = backtestdata[backtestdata.index.isin(benchmark_index_list)]
+    index_difference = len(backtestdata) - len(benchmark_data)
+    if index_difference > 0:
+        benchmark_index_list = list(benchmark_data.index)
+        backtestdata = backtestdata[backtestdata.index.isin(benchmark_index_list)]
+    else:
+        backtestdata_index_list = list(backtestdata.index)
+        benchmark_data = benchmark_data[benchmark_data.index.isin(backtestdata_index_list)]
+        
     benchmark = benchmark_data.Close.pct_change().dropna()
-            
+
     if entry_comparator == '<, Crossing Down' and exit_comparator == '<, Crossing Down':
         buy_price, sell_price, strategy_signals = crossingdown_crossingdown(backtestdata, entry_data1, entry_data2, exit_data1, exit_data2)
     elif entry_comparator == '<, Crossing Down' and exit_comparator == '>, Crossing Up':

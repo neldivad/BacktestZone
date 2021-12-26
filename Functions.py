@@ -41,7 +41,7 @@ def import_data(asset_type, ticker, start_date, end_date):
     elif asset_type == 'Funds':
         data = inv.get_fund_historical_data(fund = ticker, country = 'United States', from_date = start_date, to_date = end_date)
     elif asset_type == 'Bonds':
-        data = inv.get_bond_historical_data(bond = ticker, country = 'United States', from_date = start_date, to_date = end_date)
+        data = inv.get_bond_historical_data(bond = ticker, from_date = start_date, to_date = end_date)
     return data
     
 def import_indicators():

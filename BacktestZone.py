@@ -19,7 +19,7 @@ st.set_page_config(
 )
 
 st.sidebar.title('BacktestZone')
-st.sidebar.markdown('A free tool to backtest different trading strategies on 4000+ US Stocks')
+st.sidebar.markdown('A free tool to backtest different trading strategies on 24K+ tradeable US assets')
 st.sidebar.markdown('')
 
 backtest_timeframe = st.sidebar.expander('BACKTEST TIMEFRAME')
@@ -274,6 +274,18 @@ elif cf_bt == True:
     
     buy_hold = backtestdata.Close.pct_change().dropna()
     strategy = (position[1:] * buy_hold).dropna()
+    
+    sb_index_difference = len(strategy) - len(benchmark)
+    if sb_index_difference > 0:
+        benchmark_index_list = list(benchmark.index)
+        strategy = strategy[strategy.index.isin(benchmark_index_list)]
+    else:
+        strategy_index_list = list(strategy.index)
+        benchmark = benchmark[benchmark.index.isin(strategy_index_list)]
+    
+    strategy_index_list = list(strategy.index)
+    benchmark = benchmark[benchmark.index.isin(strategy_index_list)]
+    
     strategy_returns_per = np.exp(strategy.sum()) - 1
     bh_returns_per = np.exp(buy_hold.sum()) - 1
     

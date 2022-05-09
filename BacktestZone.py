@@ -218,22 +218,24 @@ elif cf_bt == True:
         
     benchmark = benchmark_data.Close.pct_change().dropna()
     
-    entry_index_difference = len(entry_data1) - len(entry_data2)
-    if entry_index_difference > 0:
-        entry_data2_list = list(entry_data2.index)
-        entry_data1 = entry_data1[entry_data1.index.isin(entry_data2_list)]
-    else:
-        entry_data1_list = list(entry_data1.index)
-        entry_data2 = entry_data2[entry_data2.index.isin(entry_data1_list)]
+    try:
+        entry_index_difference = len(entry_data1) - len(entry_data2)
+        if entry_index_difference > 0:
+            entry_data2_list = list(entry_data2.index)
+            entry_data1 = entry_data1[entry_data1.index.isin(entry_data2_list)]
+        else:
+            entry_data1_list = list(entry_data1.index)
+            entry_data2 = entry_data2[entry_data2.index.isin(entry_data1_list)]
         
-    exit_index_difference = len(exit_data1) - len(exit_data2)
-    if exit_index_difference > 0:
-        exit_data2_list = list(exit_data2.index)
-        exit_data1 = exit_data1[exit_data1.index.isin(exit_data2_list)]
-    else:
-        exit_data1_list = list(exit_data1.index)
-        exit_data2 = exit_data2[exit_data2.index.isin(exit_data1_list)]
-        
+        exit_index_difference = len(exit_data1) - len(exit_data2)
+        if exit_index_difference > 0:
+            exit_data2_list = list(exit_data2.index)
+            exit_data1 = exit_data1[exit_data1.index.isin(exit_data2_list)]
+        else:
+            exit_data1_list = list(exit_data1.index)
+            exit_data2 = exit_data2[exit_data2.index.isin(exit_data1_list)]
+    except:
+        pass
     if entry_comparator == '<, Crossing Down' and exit_comparator == '<, Crossing Down':
         buy_price, sell_price, strategy_signals = crossingdown_crossingdown(backtestdata, entry_data1, entry_data2, exit_data1, exit_data2)
     elif entry_comparator == '<, Crossing Down' and exit_comparator == '>, Crossing Up':
